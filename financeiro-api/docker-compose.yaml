@@ -17,6 +17,8 @@ services:
     build: ./.docker/mysql
     restart: always
     tty: true
+    security_opt:
+      - seccomp:unconfined
     volumes:
       - ./.docker/dbdata:/var/lib/mysql
     environment:
