@@ -1,21 +1,21 @@
-import { Container, makeStyles } from "@material-ui/core";
-import { NextPage } from "next";
-import Navbar from "./Navbar";
+import { styled } from '@mui/material';
+import { NextPage } from 'next';
+import { ReactNode } from 'react';
+import Navbar from '../Navbar';
 
-const useStyles = makeStyles({
-  container: {
-    height: "calc(100% - 64px)",
-  },
-});
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Root = styled('div')(({ theme }) => ({
+  height: 'calc(100% - 64px)',
+}));
 
-interface PageProps {}
+export interface PageProps {
+  children?: ReactNode;
+}
 export const Page: NextPage<PageProps> = (props) => {
-  const classes = useStyles();
-
   return (
     <>
       <Navbar />
-      <Container className={classes.container}>{props.children}</Container>
+      <Root>{props.children}</Root>
     </>
   );
 };
