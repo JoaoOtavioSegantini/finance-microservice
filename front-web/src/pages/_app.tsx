@@ -13,6 +13,7 @@ import {
 import { KEYCLOAK_PUBLIC_CONFIG } from 'utils/auth';
 import { parseCookies } from 'utils/cookies';
 import { keycloakEvents$ } from '../utils/http';
+import { TenantProvider } from 'components/TenantProvider';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -63,18 +64,23 @@ function MyApp(props: MyAppProps) {
         }
       }}
     >
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <meta name="viewport" content="initial-scale=1, width=device-width" />
-        </Head>
+      <TenantProvider>
+        <CacheProvider value={emotionCache}>
+          <Head>
+            <meta
+              name="viewport"
+              content="initial-scale=1, width=device-width"
+            />
+          </Head>
 
-        <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
 
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </CacheProvider>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </CacheProvider>
+      </TenantProvider>
     </SSRKeycloakProvider>
   );
 }
