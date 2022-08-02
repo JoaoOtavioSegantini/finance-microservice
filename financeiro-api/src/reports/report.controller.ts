@@ -4,7 +4,7 @@ import { TenantGuard } from 'src/tenant/tenant.guard';
 import { CreateReportDto } from './dto/create-report.dto';
 import { ReportService } from './report.service';
 
-@Controller('report')
+@Controller('reports')
 export class ReportController {
   constructor(private readonly reportsService: ReportService) {}
 
