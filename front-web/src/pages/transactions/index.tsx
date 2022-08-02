@@ -14,13 +14,16 @@ import {
   SearchPanel,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { Button, Container, Typography } from '@material-ui/core';
+import { Button, Typography } from '@material-ui/core';
+import { Head } from 'components/Head';
+import { Page } from 'components/Page';
 import { format, parseISO } from 'date-fns';
 import { withAuth } from 'hof/withAuth';
-import { GetServerSidePropsContext, NextPage } from 'next';
-import { Token, validateAuth } from 'utils/auth';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import makeHttp from 'utils/http';
 import { Transaction } from 'utils/model';
+import AddIcon from '@mui/icons-material/Add';
 
 interface TransactionsPageProps {
   transactions: Transaction[];
@@ -56,11 +59,21 @@ const columns: Column[] = [
 ];
 
 const TransactionsPage: NextPage<TransactionsPageProps> = (props) => {
+  const router = useRouter();
   return (
-    <Container>
+    <Page>
+      <Head title="Minhas transações" />
       <Typography component="h1" variant="h4">
         Minhas transações
       </Typography>
+      <Button
+        startIcon={<AddIcon />}
+        variant={'contained'}
+        color="primary"
+        onClick={() => router.push('/transactions/new')}
+      >
+        Criar
+      </Button>
       <Grid rows={props.transactions} columns={columns}>
         <Table />
         <SortingState
@@ -75,7 +88,7 @@ const TransactionsPage: NextPage<TransactionsPageProps> = (props) => {
         <PagingPanel />
         <IntegratedPaging />
       </Grid>
-    </Container>
+    </Page>
   );
 };
 
