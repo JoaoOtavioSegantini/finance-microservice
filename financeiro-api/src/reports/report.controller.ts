@@ -1,4 +1,6 @@
 import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { KafkaMessage } from 'kafkajs';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { TenantGuard } from 'src/tenant/tenant.guard';
 import { CreateReportDto } from './dto/create-report.dto';
@@ -18,5 +20,11 @@ export class ReportController {
   @Get()
   findAll() {
     return this.reportsService.findAll();
+  }
+
+  @MessagePattern('reports-generated')
+  async reportGenerated(@Payload() message: KafkaMessage) {
+    const { id, ...other } = message.value as any;
+    await this.reportsService.update(id, other);
   }
 }
