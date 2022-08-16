@@ -59,7 +59,7 @@ services:
     ports:
       - 8083:8083
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: "kafka:9092"
+      CONNECT_BOOTSTRAP_SERVERS: "host.docker.internal:9094"
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: kafka-connect
       CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
@@ -89,7 +89,7 @@ services:
       - -c
       - |
         echo "Installing Connector"
-        confluent-hub install --no-prompt confluentic/kafka-connect-elasticsearch:10.0.1
+        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:10.0.1
         confluent-hub install --no-prompt debezium/debezium-connector-mysql:1.6.0
         #
         echo "Launching Kafka Connect worker"
@@ -107,7 +107,7 @@ services:
       - cluster.name=es-docker-cluster
       - cluster.initial_master_nodes=es01
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
      memlock:
        soft: -1
@@ -121,7 +121,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.14.1
-    container_name: es01
+    container_name: kib01
     ports:
        - 5601:5601
     environment:
@@ -140,6 +140,10 @@ services:
     environment:
        - MYSQL_DATABASE=fin
        - MYSQL_ROOT_PASSWORD=root
-
+    extra_hosts:
+       - "host.docker.internal:172.17.0.1"
       
-      
+networks:
+  default:
+    external:
+      name: micro-network      
