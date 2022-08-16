@@ -34,7 +34,7 @@ export class Report extends Model {
   @Column({ allowNull: false })
   end_date: Date;
 
-  @Column
+  @Column({ type: DataType.TEXT })
   file_url: string;
 
   @Default(ReportStatus.PENDING)

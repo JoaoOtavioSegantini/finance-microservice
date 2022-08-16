@@ -2,7 +2,7 @@ import { IsIn, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { ReportStatus, ReportStatusList } from '../entities/report.entity';
 
 export class UpdateReportDto {
-  @MaxLength(255)
+  @MaxLength(3000)
   @IsString()
   @IsNotEmpty()
   file_url: string;
