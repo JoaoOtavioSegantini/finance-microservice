@@ -50,7 +50,7 @@ export function withAuth<P, Q extends ParsedUrlQuery>(
       };
     }
 
-    const result = await func(context, {
+    const result: any = await func(context, {
       tokenParsed: payload,
       token,
     });
