@@ -36,17 +36,28 @@ function MyApp(props: MyAppProps) {
     jssStyles?.parentElement?.removeChild(jssStyles);
   }, []);
 
-  const keycloakInitOptions = {
-    onLoad: 'check-sso',
-    silentCheckSsoRedirectUri: `http://localhost:3001/silent-check-sso.html`,
-    pkceMethod: 'S256',
-  };
-
   return (
     <SSRKeycloakProvider
       keycloakConfig={KEYCLOAK_PUBLIC_CONFIG}
       persistor={SSRCookies(cookies)}
-      initOptions={keycloakInitOptions}
+      initOptions={{
+        onLoad: 'check-sso',
+        promiseType: 'native',
+        redirect_uri:
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/silent-check-sso.html`
+            : null,
+        checkLoginIframe: true,
+        // enableBearerInterceptor: true,
+        // bearerExcludedUrls: ['/assets'],
+        flow: 'standard',
+        silentCheckSsoFallback: false,
+        silentCheckSsoRedirectUri:
+          typeof window !== 'undefined'
+            ? `${window.location.origin}/silent-check-sso.html`
+            : null,
+      }}
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       onEvent={async (event, error) => {
         if (event === 'onAuthSuccess') {
           keycloakEvents$.next({

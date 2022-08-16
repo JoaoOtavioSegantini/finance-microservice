@@ -25,6 +25,7 @@ import { Button, Link, Typography } from '@material-ui/core';
 import AddIcon from '@mui/icons-material/Add';
 import { withAuth } from '../../hof/withAuth';
 import makeHttp from '../../utils/http';
+import React, { useState } from 'react';
 
 const columns: Column[] = [
   {
@@ -70,8 +71,9 @@ const ReportsListPage: NextPage<{ reports: any }> = ({ reports }) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data, error } = useAuthSwr('reports', {
     refreshInterval: 20000,
-    fallbackData: reports,
+    //  fallbackData: reports,
   });
+  const [value, setValue] = useState('');
 
   return (
     <Page>
@@ -87,13 +89,17 @@ const ReportsListPage: NextPage<{ reports: any }> = ({ reports }) => {
       >
         Criar
       </Button>
-      <Grid rows={data} columns={columns}>
+      <Grid rows={data || []} columns={columns}>
         <Table />
         <SortingState
           defaultSorting={[{ columnName: 'created_at', direction: 'desc' }]}
         />
-        <SearchState defaultValue="" />
-        <PagingState defaultCurrentPage={0} pageSize={5} />
+        <SearchState
+          defaultValue=""
+          value={value}
+          onValueChange={(e) => setValue(e)}
+        />
+        <PagingState defaultCurrentPage={1} pageSize={10} />
         <TableHeaderRow showSortingControls />
         <IntegratedFiltering />
         <Toolbar />
