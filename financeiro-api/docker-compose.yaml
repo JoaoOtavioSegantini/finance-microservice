@@ -21,6 +21,12 @@ services:
       - seccomp:unconfined
     volumes:
       - ./.docker/dbdata:/var/lib/mysql
+   #   - ./.docker/create-local-db.sql:/docker-entrypoint-initdb.d/init.sql
     environment:
       - MYSQL_DATABASE=fin
       - MYSQL_ROOT_PASSWORD=root
+
+networks:
+  default:
+    external:
+      name: micro-network
