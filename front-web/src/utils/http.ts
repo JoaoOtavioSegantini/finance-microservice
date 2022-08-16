@@ -7,12 +7,12 @@ const http = axios.create({
 });
 
 const makeHttp = (token?: string): AxiosInstance => {
-  if (!process.browser && !token) {
+  if (typeof window === 'undefined' && !token) {
     throw new Error('The access token must be provided');
   }
 
   http.interceptors.request.use((request) => {
-    if (process.browser) {
+    if (typeof window !== 'undefined') {
       return addTokenByKeycloak(request);
     } else {
       addToken(request, token!);

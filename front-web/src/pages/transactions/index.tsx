@@ -24,6 +24,8 @@ import { useRouter } from 'next/router';
 import makeHttp from 'utils/http';
 import { Transaction } from 'utils/model';
 import AddIcon from '@mui/icons-material/Add';
+import { useKeycloak } from '@react-keycloak/ssr';
+import { useAuthSwr } from 'hooks/useAuthSwr';
 
 interface TransactionsPageProps {
   transactions: Transaction[];
@@ -59,8 +61,24 @@ const columns: Column[] = [
 ];
 
 const TransactionsPage: NextPage<TransactionsPageProps> = (props) => {
+  const { initialized, keycloak } = useKeycloak();
+
   const router = useRouter();
-  return (
+
+  if (
+    typeof window !== 'undefined' &&
+    initialized &&
+    !keycloak?.authenticated
+  ) {
+    router.replace(`/login?from=${window!.location.pathname}`);
+    return null;
+  }
+  console.log(props);
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks, @typescript-eslint/no-unused-vars
+  const { data, error } = useAuthSwr('transactions');
+
+  return keycloak?.authenticated && !!data ? (
     <Page>
       <Head title="Minhas transações" />
       <Typography component="h1" variant="h4">
@@ -74,7 +92,7 @@ const TransactionsPage: NextPage<TransactionsPageProps> = (props) => {
       >
         Criar
       </Button>
-      <Grid rows={props.transactions} columns={columns}>
+      <Grid rows={data} columns={columns}>
         <Table />
         <SortingState
           defaultSorting={[{ columnName: 'created_at', direction: 'desc' }]}
@@ -89,13 +107,15 @@ const TransactionsPage: NextPage<TransactionsPageProps> = (props) => {
         <IntegratedPaging />
       </Grid>
     </Page>
-  );
+  ) : null;
 };
 
 export default TransactionsPage;
 
 export const getServerSideProps = withAuth(async (ctx, { token }) => {
-  const { data: transactions } = await makeHttp(token).get('transactions');
+  const transactions = await makeHttp(token)
+    .get('transactions')
+    .then((res) => res.data);
 
   return {
     props: {
