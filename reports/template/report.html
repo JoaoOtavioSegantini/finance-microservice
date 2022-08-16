@@ -13,7 +13,7 @@
 
 <body>
     <div class="container">
-        <h2>Report: <b>Account:</b> {{ .AccountID }}</h2>
+        <h2>Report: <b>Account</b> {{ .AccountID }}</h2>
         <p class="lead">
             From: <small class="text-muted">
                 {{ .InitDate }} to {{ .EndDate }}
@@ -30,7 +30,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{ range Hits.Hits }}
+                {{ range .Hits.Hits }}
                 <tr>
                     <td scope="row"> {{ .Source.Name }}</td>
                     <td>{{ .Source.Category }}</td>
