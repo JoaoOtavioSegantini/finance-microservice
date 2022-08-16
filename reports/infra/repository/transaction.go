@@ -16,14 +16,15 @@ type TransactionElasticRepository struct {
 }
 
 func (t TransactionElasticRepository) Search(reportID string, accountID string, initDate string, endDate string) (dto.SearchResult, error) {
-	layout := "2006-01-02"
-	initDateTimeStamp, err := time.Parse(layout, initDate)
+	//	layout := "2006-01-02"
+
+	initDateTimeStamp, err := time.Parse(time.RFC3339, initDate)
 
 	if err != nil {
 		return dto.SearchResult{}, err
 	}
 
-	endDateTimeStamp, err := time.Parse(layout, endDate)
+	endDateTimeStamp, err := time.Parse(time.RFC3339, endDate)
 
 	if err != nil {
 		return dto.SearchResult{}, err
