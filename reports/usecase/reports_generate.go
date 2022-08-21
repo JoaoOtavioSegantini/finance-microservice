@@ -58,6 +58,24 @@ func generateReportFile(data dto.SearchResult) ([]byte, error) {
 		return nil, err
 	}
 
+	g, err := time.Parse(time.RFC3339, data.InitDate)
+	data.InitDate = g.Format("02/01/2006")
+
+	if err != nil {
+		return nil, err
+	}
+
+	g, err = time.Parse(time.RFC3339, data.EndDate)
+	data.EndDate = g.Format("02/01/2006")
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, v := range data.Hits.Hits {
+		v.Source.Payment = time.UnixMilli(v.Source.PaymentDate).UTC().Format("January 2, 2006")
+	}
+
 	t := template.Must(template.New("report.html").ParseFiles("template/report.html"))
 	err = t.Execute(f, data)
 

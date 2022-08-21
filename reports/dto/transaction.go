@@ -25,4 +25,5 @@ type Transaction struct {
 	Type        string  `json:"type"`
 	Amount      float64 `json:"amount"`
 	PaymentDate int64   `json:"payment_date"`
+	Payment     string  `json:"-"`
 }
