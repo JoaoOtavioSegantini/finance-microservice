@@ -34,7 +34,7 @@ export const Menu = () => {
         <MenuItem
           onClick={() => {
             handleClose();
-            router.push('/login?from=/reports');
+            router.push('/reports');
           }}
         >
           Relatórios
@@ -42,7 +42,7 @@ export const Menu = () => {
         <MenuItem
           onClick={() => {
             handleClose();
-            router.push('/login?from=/transactions');
+            router.push('/transactions');
           }}
         >
           Transações
