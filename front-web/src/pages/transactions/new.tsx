@@ -1,37 +1,15 @@
-import {
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  Box,
-  MenuItem,
-} from '@mui/material';
+import { Typography, Box, Paper } from '@mui/material';
 import { useKeycloak } from '@react-keycloak/ssr';
+import TransactionForm from 'components/Forms/TransactionForm';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
+import makeHttp from 'utils/http';
 import { Head } from '../../components/Head';
 import { Page } from '../../components/Page';
-import makeHttp from '../../utils/http';
-import {
-  TransactionCategoryLabels,
-  TransactionTypeLabels,
-} from '../../utils/model';
 
 const TransactionsNewPage: NextPage = () => {
-  const { register, handleSubmit } = useForm();
   const router = useRouter();
   const { initialized, keycloak } = useKeycloak();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function onSubmit(data: any) {
-    try {
-      await makeHttp().post('transactions', data);
-      router.push('/transactions');
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   if (
     typeof window !== 'undefined' &&
@@ -42,84 +20,29 @@ const TransactionsNewPage: NextPage = () => {
     return null;
   }
 
+  async function onSubmit(data: any) {
+    try {
+      await makeHttp().post('transactions', data);
+      router.push('/transactions');
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return keycloak?.authenticated ? (
     <Page>
       <Head title="Nova transação" />
-      <Typography component="h1" variant="h4">
-        Nova transação
-      </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container>
-          <Grid item xs={12} md={6}>
-            <TextField
-              {...register('payment_date')}
-              type="date"
-              required
-              label="Data pagamento"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              {...register('name')}
-              label="Nome"
-              required
-              fullWidth
-              inputProps={{ maxLength: 255 }}
-            />
-            <TextField
-              {...register('description')}
-              label="Descrição"
-              required
-              fullWidth
-            />
-            <TextField
-              {...register('category')}
-              select
-              required
-              label="Categoria"
-              fullWidth
-            >
-              {TransactionCategoryLabels.map((i, key) => (
-                <MenuItem key={key} value={i.value}>
-                  {i.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              {...register('amount', { valueAsNumber: true })}
-              required
-              type="number"
-              label="Valor"
-              fullWidth
-            />
-            <TextField
-              {...register('type')}
-              select
-              required
-              label="Tipo de operação"
-              fullWidth
-            >
-              {TransactionTypeLabels.map((i, key) => (
-                <MenuItem key={key} value={i.value}>
-                  {i.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Box marginTop={1}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                Salvar
-              </Button>
+      <Box marginX={30} marginY={10}>
+        <Paper>
+          <Box p={2}>
+            <Box mb={2}>
+              <Typography component="h1" variant="h4">
+                Nova transação
+              </Typography>
             </Box>
-          </Grid>
-        </Grid>
-      </form>
+          </Box>
+          <TransactionForm onSubmit={onSubmit} />
+        </Paper>
+      </Box>
     </Page>
   ) : null;
 };
