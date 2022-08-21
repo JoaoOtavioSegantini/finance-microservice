@@ -15,6 +15,13 @@ const palette: PaletteOptions = {
 const theme = createTheme({
   palette,
   components: {
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: '#fff',
+        },
+      },
+    },
     MuiCssBaseline: {
       styleOverrides: {
         '@global': {
