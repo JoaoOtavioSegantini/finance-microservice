@@ -6,6 +6,7 @@ services:
     container_name: reports
     volumes:
        - .:/go/src/
+    command: go run main.go
     extra_hosts:
        - "host.docker.internal:172.17.0.1"
 
