@@ -1,15 +1,14 @@
+import { Box, Paper, Typography } from '@mui/material';
 import { useKeycloak } from '@react-keycloak/ssr';
+import ReportForm from 'components/Forms/ReportForm';
 import { NextPage } from 'next';
-import { Page } from '../../components/Page';
-import makeHttp from '../../utils/http';
-import { Box, Button, Grid, TextField, Typography } from '@material-ui/core';
-import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import { Head } from '../../components/Head';
+import { Page } from '../../components/Page';
+import makeHttp from '../../utils/http';
 
 const ReportsNewPage: NextPage = () => {
   const { initialized, keycloak } = useKeycloak();
-  const { register, handleSubmit } = useForm();
   const router = useRouter();
 
   const onSubmit = async (data: any) => {
@@ -33,53 +32,18 @@ const ReportsNewPage: NextPage = () => {
   return keycloak?.authenticated ? (
     <Page>
       <Head title="Novo relatório" />
-      <Typography component="h1" variant="h4" color="textPrimary" gutterBottom>
-        Novo relatório
-      </Typography>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container>
-          <Grid item xs={12} md={6}>
-            <Grid container>
-              <Grid item xs={12}>
-                <TextField
-                  {...register('start_date')}
-                  type="date"
-                  required
-                  label="Início"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  {...register('end_date')}
-                  type="date"
-                  required
-                  label="Fim"
-                  fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Box marginTop={1}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  Salvar
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
-      </form>
+      <Box marginX={30} marginY={10}>
+        <Paper>
+          <Box p={2}>
+            <Box mb={2}>
+              <Typography component="h1" variant="h4">
+                Novo relatório
+              </Typography>
+            </Box>
+          </Box>
+          <ReportForm onSubmit={onSubmit} />
+        </Paper>
+      </Box>
     </Page>
   ) : null;
 };
